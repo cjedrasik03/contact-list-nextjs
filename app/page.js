@@ -1,13 +1,17 @@
-import React from "react";
+const initialContacts = [
+  {
+    id: 123456,
+    name: 'Albert Einstein',
+    image_url: 'https://upload.wikimedia.org/wikipedia/commons/d/d3/Albert_Einstein_Head.jpg',
+    email: 'aeinstein@example.com',
+    phone_number: '15555555555',
+  }
+];
 
 export default function HomePage() {
-  return (
-    <div className="container d-flex vh-100 justify-content-center align-items-center bg-primary text-white">
-      <div className="text-center">
-        <h1 className="display-4 fw-bold">Bootstrap is Working!</h1>
-        <p className="lead">If you see this, Bootstrap is correctly installed.</p>
-        <button className="btn btn-light mt-3">Click Me</button>
-      </div>
+    return (
+    <div className="container mt-4">
+      <h1>My Contacts</h1>
     </div>
   );
 }
