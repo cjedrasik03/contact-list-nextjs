@@ -1,8 +1,8 @@
 'use client';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useState } from 'react';
 
-const initialContacts = [
+const defaultContacts = [
   {
     id: 123456,
     name: 'Albert Einstein',
@@ -13,18 +13,26 @@ const initialContacts = [
 ];
 
 export default function HomePage() {
-  const [contacts, setContacts] = useState(initialContacts);
+  const [contacts, setContacts] = useState(defaultContacts);
+
+  useEffect(() => {
+    // 🟢 Load saved contacts from localStorage
+    const saved = JSON.parse(localStorage.getItem('contacts')) || [];
+
+    // 🟢 Combine default + saved
+    const combined = [...defaultContacts, ...saved];
+
+    setContacts(combined);
+  }, []);
 
   return (
-    <>
-      <div className="container text-center mt-4">
-      <h1 className='fw-bold'>All Contacts</h1>
+    <div className="container mt-4">
+      <h1>My Contacts</h1>
 
-      <Link href="/contacts/new" className="btn btn-primary fw-bold mb-3">
-        ADD CONTACT
+      <Link href="/contacts/new" className="btn btn-primary mb-4">
+        Add Contact
       </Link>
 
-      <div className='container fw-bold text-start'>
       {contacts.map(contact => (
         <div key={contact.id} className="card mb-3">
           <div className="card-body d-flex align-items-center justify-content-between">
@@ -44,14 +52,12 @@ export default function HomePage() {
                 <p className="mb-0">Phone: {contact.phone_number}</p>
               </div>
             </div>
-            <Link href={`/contacts/${contact.id}`} className="btn btn-outline-primary">
+            <Link href={`/contacts/${contact.id}`} className="btn btn-outline-secondary">
               View Contact
             </Link>
           </div>
         </div>
       ))}
-      </div>
-      </div>
-    </>
+    </div>
   );
 }

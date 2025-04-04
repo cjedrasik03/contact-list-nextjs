@@ -14,41 +14,60 @@ export default function NewContact() {
 
   const [error, setError] = useState('');
 
-
-  // Handles form change
-  const handleChange = e => {
+  const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
   };
 
-  // Handles form submition & prevents the page referesh
+  // Handles submit button
   const handleSubmit = e => {
     e.preventDefault();
-
-    // Basic form validation to ensure some input was made
-    if (!formData.name || !formData.image_url || !formData.email || !formData.phone_number) {
-      setError('ALL FIELDS ARE REQUIRED!');
+  
+    const { name, image_url, email, phone_number } = formData;
+  
+    if (!name || !image_url || !email || !phone_number) {
+      setError('All fields are required.');
       return;
     }
-
-      // Generates the random contact ID num per new contact
+  
+    const phoneRegex = /^\d{3}\d{3}\d{4}$/;
+    if (!phoneRegex.test(phone_number)) {
+      setError('Phone number must be in format: 999-999-9999');
+      return;
+    }
+  
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+  
+    try {
+      new URL(image_url);
+    } catch {
+      setError('Please enter a valid image URL.');
+      return;
+    }
+  
     const newContact = {
       ...formData,
-      id: Math.floor(Math.random() * 100000000) 
+      id: Math.floor(Math.random() * 100000000)
     };
-
-    // posts the new contact in console.log (probably unnecessary)
-    console.log('New Contact:', newContact);
-
-    // On successful submit it sends them back to home contacts page
+  
+    // Loads the existing contacts
+    const existingContacts = JSON.parse(localStorage.getItem('contacts')) || [];
+  
+    // Add the new contact
+    const updatedContacts = [...existingContacts, newContact];
+  
+    // Saves to localStorage
+    localStorage.setItem('contacts', JSON.stringify(updatedContacts));
+  
+    // Redirect to home contacts page
     router.push('/');
   };
-
-  // I know I didnt validate the inputs like Phone# (999)999-9999 or email like sample@domain.com - Realisitcally I would
-
-  // Very basic but also put a cancel button instead of Home incase someone someone doesnt want to proceed with adding a contact
 
   return (
     <div className="container card p-5 text-center mt-4">
